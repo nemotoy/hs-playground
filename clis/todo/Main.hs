@@ -5,8 +5,12 @@ import Data.List
 import Control.Exception
 
 main = do
-    (command:argList) <- getArgs
-    dispatch command argList
+    args <- getArgs
+    case args of
+        [] -> help
+        ["help"] -> help
+        ["-help"] -> help
+        (x:xs) -> dispatch x xs
 
 dispatch :: String -> [String] -> IO ()
 dispatch "add" = add
@@ -17,6 +21,9 @@ dispatch command = doesntExist command
 doesntExist :: String -> [String] -> IO ()
 doesntExist command _ =
     putStrLn $ "The " ++ command ++ " command doesn't exist. only supports 'add' or 'view' or 'remove'."
+
+help :: IO()
+help = putStrLn "help ... message"
 
 add :: [String] -> IO ()
 add [fileName, todoItem] = appendFile fileName (todoItem ++ "\n")
